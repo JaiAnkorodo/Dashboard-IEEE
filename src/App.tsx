@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
-import ECommerce from './pages/Dashboard/ECommerce';
+import AchievmentPage from './pages/AchievmentPage/Achievment';
+import NewsPage from './pages/NewsPage/News';
 import RecentActivitiesPage from './pages/RecentActivitiesPage/Activities';
 import AddActivityPage from './pages/AddActivityPage/Add';
+import AddAchievmentPage from './pages/AddAchievmentPage/Achiv';
+import AddNewsPage from './pages/AddNewsPage/Addnews';
 import EditActivityPage from './pages/EditActivityPage/Edit';
+import EditNewsPage from './pages/EditNewsPage/Edit';
+import EditAchievmentPage from './pages/EditAchievmentPage/Edit.tsx';
 import LogPage from './pages/LogPage/log';
-import Settings from './pages/Settings';
-import Alerts from './pages/UiElements/Alerts';
-import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 
 function App() {
@@ -33,39 +34,29 @@ function App() {
     <DefaultLayout>
       <Routes>
         <Route
-          index
+          path="/achievment"
           element={
             <>
-              <PageTitle title="IEEE Dashboard Admin" />
-              <ECommerce />
+              <PageTitle title="Achievment | IEEE Dashboard Admin" />
+              <AchievmentPage />
             </>
           }
         />
-
+        <Route
+          path="/news"
+          element={
+            <>
+              <PageTitle title="News | IEEE Dashboard Admin" />
+              <NewsPage />
+            </>
+          }
+        />
         <Route
           path="/log"
           element={
             <>
-              <PageTitle title="Log | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Log | IEEE Dashboard Admin" />
               <LogPage />
-            </>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Settings />
-            </>
-          }
-        />
-        <Route
-          path="/ui/alerts"
-          element={
-            <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Alerts />
             </>
           }
         />
@@ -73,7 +64,7 @@ function App() {
           path="/recent-activities"
           element={
             <>
-              <PageTitle title="Recent Activities | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Recent Activities | IEEE Dashboard Admin" />
               <RecentActivitiesPage />
             </>
           }
@@ -82,8 +73,26 @@ function App() {
           path="/add-activity"
           element={
             <>
-              <PageTitle title="Add New Activity" />
+              <PageTitle title="Add New Activity | IEEE Dashboard Admin" />
               <AddActivityPage />
+            </>
+          }
+        />
+        <Route
+          path="/add-achievment"
+          element={
+            <>
+              <PageTitle title="Add New Achievment | IEEE Dashboard Admin" />
+              <AddAchievmentPage />
+            </>
+          }
+        />
+        <Route
+          path="/add-news"
+          element={
+            <>
+              <PageTitle title="Add New News | IEEE Dashboard Admin" />
+              <AddNewsPage />
             </>
           }
         />
@@ -91,25 +100,35 @@ function App() {
           path="/edit-activity/:id"
           element={
             <>
-              <PageTitle title="Edit Activity" />
+              <PageTitle title="Edit Activity | IEEE Dashboard Admin" />
               <EditActivityPage />
             </>
           }
         />
         <Route
-          path="/ui/buttons"
+          path="/edit-news/:id"
           element={
             <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Buttons />
+              <PageTitle title="Edit News | IEEE Dashboard Admin" />
+              <EditNewsPage />
             </>
           }
         />
         <Route
+          path="/edit-achievment/:id"
+          element={
+            <>
+              <PageTitle title="Edit Achievment | IEEE Dashboard Admin" />
+              <EditAchievmentPage />
+            </>
+          }
+        />
+
+        <Route
           path="/auth/signin"
           element={
             <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signin | IEEE Dashboard Admin" />
               <SignIn />
             </>
           }
@@ -118,7 +137,7 @@ function App() {
           path="/auth/signup"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signup | IEEE Dashboard Admin" />
               <SignUp />
             </>
           }

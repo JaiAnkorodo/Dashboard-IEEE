@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { FaPen, FaTrash, FaPlus } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
-interface Activity {
+interface News {
   id: number;
   title: string;
   description: string;
@@ -12,33 +12,33 @@ interface Activity {
   photo?: string;
 }
 
-const RecentActivitiesPage: React.FC = () => {
-  const [activities, setActivities] = useState<Activity[]>([
+const NewsPage: React.FC = () => {
+  const [news, setNews] = useState<News[]>([
     {
       id: 1,
-      title: 'Company Meeting',
-      description: 'Monthly company meeting to discuss goals.',
-      date: '2024-12-14',
+      title: 'New Office Opened',
+      description: 'We have opened a new office in Jakarta.',
+      date: '2024-12-01',
       photo: '',
     },
     {
       id: 2,
-      title: 'Product Launch',
-      description: 'Launching the new app update.',
-      date: '2024-12-10',
+      title: 'Annual Report Published',
+      description: 'Our annual report for 2023 is now available.',
+      date: '2024-11-30',
       photo: '',
     },
     {
       id: 3,
-      title: 'Team Outing',
-      description: 'Team building activity.',
-      date: '2024-12-12',
+      title: 'Partnership Announcement',
+      description: 'We are now partnering with XYZ Corporation.',
+      date: '2024-11-25',
       photo: '',
     },
   ]);
 
-  const [filterType, setFilterType] = useState<'date' | 'title' | ''>(''); // Filter by type (date or title)
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc'); // Sort order (A-Z or latest)
+  const [filterType, setFilterType] = useState<'date' | 'title' | ''>('');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const handleDelete = (id: number) => {
     Swal.fire({
@@ -53,15 +53,14 @@ const RecentActivitiesPage: React.FC = () => {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        setActivities((prev) => prev.filter((activity) => activity.id !== id));
-        Swal.fire('Deleted!', 'The activity has been deleted.', 'success');
+        setNews((prev) => prev.filter((article) => article.id !== id));
+        Swal.fire('Deleted!', 'The news has been deleted.', 'success');
       }
     });
   };
 
-  // Function for sorting activities based on title or date
-  const sortedActivities = () => {
-    const sorted = [...activities];
+  const sortedNews = () => {
+    const sorted = [...news];
 
     if (filterType === 'title') {
       return sorted.sort((a, b) => {
@@ -81,26 +80,23 @@ const RecentActivitiesPage: React.FC = () => {
     return sorted;
   };
 
-  const filteredActivities = sortedActivities(); // Automatically apply sorting based on filterType and sortOrder
+  const filteredNews = sortedNews();
 
   return (
     <div className="p-6 bg-light-background dark:bg-dark-background min-h-screen">
-      <Breadcrumb pageName="Recent Activities" />
+      <Breadcrumb pageName="News" />
 
-      {/* Add New Button */}
       <div className="mb-6 flex justify-between">
         <Link
-          to="/add-activity"
+          to="/add-news"
           className="flex items-center px-4 py-2 bg-[#6B0DE3] text-white rounded-lg shadow-md hover:bg-purple-700 dark:bg-purple-800 dark:hover:bg-purple-900"
         >
           <FaPlus className="mr-2" />
-          Add New Activity
+          Add New News
         </Link>
       </div>
 
-      {/* Filter Section */}
       <div className="flex space-x-6 mb-6 items-center">
-        {/* Filter Type */}
         <div className="flex items-center space-x-2">
           <label className="text-gray-600 dark:text-gray-300">Filter By:</label>
           <select
@@ -116,7 +112,6 @@ const RecentActivitiesPage: React.FC = () => {
           </select>
         </div>
 
-        {/* Sort Order */}
         <div className="flex items-center space-x-2">
           <label className="text-gray-600 dark:text-gray-300">
             Sort Order:
@@ -132,66 +127,59 @@ const RecentActivitiesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-light-border dark:border-dark-border">
           <thead>
             <tr className="bg-gray-100 dark:bg-gray-900">
-              <th className="border border-light-border dark:border-dark-border px-4 py-2 text-left text-black dark:text-white">
+              <th className="border px-4 py-2 text-left text-black dark:text-white">
                 #
               </th>
-              <th className="border border-light-border dark:border-dark-border px-4 py-2 text-left text-black dark:text-white">
+              <th className="border px-4 py-2 text-left text-black dark:text-white">
                 Title
               </th>
-              <th className="border border-light-border dark:border-dark-border px-4 py-2 text-left text-black dark:text-white">
+              <th className="border px-4 py-2 text-left text-black dark:text-white">
                 Description
               </th>
-              <th className="border border-light-border dark:border-dark-border px-4 py-2 text-left text-black dark:text-white">
+              <th className="border px-4 py-2 text-left text-black dark:text-white">
                 Date
               </th>
-              <th className="border border-light-border dark:border-dark-border px-4 py-2 text-left text-black dark:text-white">
+              <th className="border px-4 py-2 text-left text-black dark:text-white">
                 Photo
               </th>
-              <th className="border border-light-border dark:border-dark-border px-4 py-2 text-left text-black dark:text-white">
+              <th className="border px-4 py-2 text-left text-black dark:text-white">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="text-black dark:text-white">
-            {filteredActivities.map((activity, index) => (
-              <tr key={activity.id} className="bg-white dark:bg-gray-800">
-                <td className="border border-light-border dark:border-dark-border px-4 py-2">
-                  {index + 1}
+            {filteredNews.map((article, index) => (
+              <tr key={article.id} className="bg-white dark:bg-gray-800">
+                <td className="border px-4 py-2">{index + 1}</td>
+                <td className="border px-4 py-2">{article.title}</td>
+                <td className="border px-4 py-2 break-words">
+                  {article.description}
                 </td>
-                <td className="border border-light-border dark:border-dark-border px-4 py-2">
-                  {activity.title}
-                </td>
-                <td className="border border-light-border dark:border-dark-border px-4 py-2 break-words">
-                  {activity.description}
-                </td>
-                <td className="border border-light-border dark:border-dark-border px-4 py-2">
-                  {activity.date}
-                </td>
-                <td className="border border-light-border dark:border-dark-border px-4 py-2">
-                  {activity.photo?.trim() ? (
+                <td className="border px-4 py-2">{article.date}</td>
+                <td className="border px-4 py-2">
+                  {article.photo?.trim() ? (
                     <img
-                      src={activity.photo}
-                      alt="Activity"
+                      src={article.photo}
+                      alt="News"
                       className="w-20 h-20 object-cover rounded-lg"
                     />
                   ) : (
                     'No photo'
                   )}
                 </td>
-                <td className="border border-light-border dark:border-dark-border px-4 py-2 flex items-center space-x-2">
+                <td className="border px-4 py-2 flex items-center space-x-2">
                   <Link
-                    to={`/edit-activity/${activity.id}`}
+                    to={`/edit-news/${article.id}`}
                     className="flex items-center px-3 py-1 bg-yellow-400 text-white rounded-lg shadow-md hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600"
                   >
                     <FaPen className="mr-2" /> Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(activity.id)} // Trigger SweetAlert on click
+                    onClick={() => handleDelete(article.id)}
                     className="flex items-center px-3 py-1 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                   >
                     <FaTrash className="mr-2" /> Delete
@@ -206,4 +194,4 @@ const RecentActivitiesPage: React.FC = () => {
   );
 };
 
-export default RecentActivitiesPage;
+export default NewsPage;
