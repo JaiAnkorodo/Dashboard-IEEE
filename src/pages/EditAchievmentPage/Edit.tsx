@@ -8,7 +8,7 @@ interface Achievment {
   title: string;
   description: string;
   date: string;
-  photo?: string; // Storing URL as a string
+  photo?: string;
 }
 
 const EditAchievmentPage: React.FC = () => {
@@ -73,7 +73,7 @@ const EditAchievmentPage: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const fileURL = URL.createObjectURL(file); // Convert the file to a URL
+      const fileURL = URL.createObjectURL(file);
       setAchievment({ ...achievment, photo: fileURL });
     }
   };
@@ -133,7 +133,7 @@ const EditAchievmentPage: React.FC = () => {
         <div className="flex space-x-4 mt-4">
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+            className="px-4 py-2 bg-[#6B0DE3] text-white rounded-lg shadow-md hover:bg-[#6B0DE3] dark:bg-[#6B0DE3] dark:hover:bg-[#6B0DE3]0"
           >
             Update Achievment
           </button>

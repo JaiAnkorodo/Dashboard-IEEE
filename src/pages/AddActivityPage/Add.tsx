@@ -6,13 +6,11 @@ import Swal from 'sweetalert2';
 const AddActivityPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // State for the form fields
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
 
-  // Handle photo upload and preview
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -24,7 +22,6 @@ const AddActivityPage: React.FC = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !description || !date) {
@@ -42,7 +39,7 @@ const AddActivityPage: React.FC = () => {
       <Breadcrumb pageName="Add New Activity" />
       <form
         onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+        className="max-w-100% mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
       >
         {/* Title Input */}
         <div className="mb-4">

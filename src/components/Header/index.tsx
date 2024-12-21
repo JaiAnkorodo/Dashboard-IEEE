@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import LogoIcon from '../../images/logo/logo-icon.svg';
+import DropdownNotification from './DropdownNotification';
+import DropdownUser from './DropdownUser';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
 const Header = (props: {
@@ -51,11 +51,6 @@ const Header = (props: {
               </span>
             </span>
           </button>
-          {/* <!-- Hamburger Toggle BTN --> */}
-
-          <Link className="block flex-shrink-0 lg:hidden" to="/">
-            <img src={LogoIcon} alt="Logo" />
-          </Link>
         </div>
 
         <div className="hidden sm:block">
@@ -63,7 +58,7 @@ const Header = (props: {
             <div className="relative">
               <button className="absolute left-0 top-1/2 -translate-y-1/2">
                 <svg
-                  className="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
+                  className="fill-body hover:fill-[#6B0DE3] dark:fill-bodydark dark:hover:fill-[#6B0DE3]"
                   width="20"
                   height="20"
                   viewBox="0 0 20 20"
@@ -99,8 +94,14 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
             {/* <!-- Dark Mode Toggler --> */}
-            {/* <!-- Chat Notification Area --> */}
+            {/* <!-- Notification Menu Area --> */}
+            <DropdownNotification />
+            {/* <!-- Notification Menu Area --> */}
           </ul>
+
+          {/* <!-- User Area --> */}
+          <DropdownUser />
+          {/* <!-- User Area --> */}
         </div>
       </div>
     </header>

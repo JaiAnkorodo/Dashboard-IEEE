@@ -13,6 +13,7 @@ import AddNewsPage from './pages/AddNewsPage/Addnews';
 import EditActivityPage from './pages/EditActivityPage/Edit';
 import EditNewsPage from './pages/EditNewsPage/Edit';
 import EditAchievmentPage from './pages/EditAchievmentPage/Edit.tsx';
+import Settings from './pages/Settings';
 import LogPage from './pages/LogPage/log';
 import DefaultLayout from './layout/DefaultLayout';
 
@@ -123,6 +124,15 @@ function App() {
             <>
               <PageTitle title="Edit Achievment | IEEE Dashboard Admin" />
               <EditAchievmentPage />
+            </>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <>
+              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Settings />
             </>
           }
         />

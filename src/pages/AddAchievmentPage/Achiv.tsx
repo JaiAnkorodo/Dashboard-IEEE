@@ -42,7 +42,7 @@ const AchievmentPage: React.FC = () => {
       <Breadcrumb pageName="Add New Achievment" />
       <form
         onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+        className="max-w-100% mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
       >
         {/* Title Input */}
         <div className="mb-4">

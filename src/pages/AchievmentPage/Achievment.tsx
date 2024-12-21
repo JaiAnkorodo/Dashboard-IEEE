@@ -109,7 +109,7 @@ const AchievmentPage: React.FC = () => {
             onChange={(e) =>
               setFilterType(e.target.value as 'date' | 'title' | '')
             }
-            className="p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6B0DE3]"
           >
             <option value="">Select Filter</option>
             <option value="date">Date</option>
@@ -125,7 +125,7 @@ const AchievmentPage: React.FC = () => {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-            className="p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6B0DE3]"
           >
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
