@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom'; // Tambahkan Navigate
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
@@ -33,6 +33,9 @@ function App() {
   ) : (
     <DefaultLayout>
       <Routes>
+        {/* Rute Default ke /achievment */}
+        <Route path="/" element={<Navigate to="/achievment" replace />} />
+
         <Route
           path="/achievment"
           element={
@@ -123,7 +126,6 @@ function App() {
             </>
           }
         />
-
         <Route
           path="/auth/signin"
           element={
