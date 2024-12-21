@@ -4,10 +4,10 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import IEEELogo from '../../images/logo/logo-blue.jpg'; // Pastikan file logo ini ada
 import IEEELogoDark from '../../images/logo/logo.png'; // Pastikan file logo ini ada
 
-const SignUp: React.FC = () => {
+const Login: React.FC = () => {
   return (
     <>
-      <Breadcrumb pageName="Sign Up" />
+      <Breadcrumb pageName="Login" />
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
@@ -20,15 +20,15 @@ const SignUp: React.FC = () => {
                   alt="IEEE SB Logo Dark"
                 />
                 <img
-                  className="dark:hidden h-auto w-40"
+                  className="dark:hidden h-auto w-100%"
                   src={IEEELogo}
                   alt="IEEE SB Logo"
                 />
               </Link>
 
-              <p className="5xl:px-20 text-lg text-gray-600">
-                Join IEEE Student Branch Telkom University to explore exclusive
-                resources and networks.
+              <p className="5xl:px-50 text-lg text-gray-600">
+                Welcome to IEEE Student Branch Telkom University. Log in to
+                access your dashboard.
               </p>
 
               <span className="mt-15 inline-block">
@@ -48,28 +48,13 @@ const SignUp: React.FC = () => {
           <div className="w-full xl:w-1/2">
             <div className="p-8 md:p-12 lg:p-20">
               <h2 className="mb-4 text-2xl font-bold text-gray-800 dark:text-gray-100">
-                Sign Up for IEEE SB Telkom University
+                Login to IEEE SB Telkom University
               </h2>
               <p className="mb-8 text-sm text-gray-600 dark:text-gray-400">
-                Create your account to start your journey.
+                Enter your credentials to continue.
               </p>
 
               <form>
-                <div className="mb-4">
-                  <label
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                    htmlFor="name"
-                  >
-                    Full Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    className="mt-1 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-gray-800 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-                    placeholder="John Doe"
-                  />
-                </div>
-
                 <div className="mb-4">
                   <label
                     className="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -85,7 +70,7 @@ const SignUp: React.FC = () => {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-6">
                   <label
                     className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                     htmlFor="password"
@@ -100,36 +85,21 @@ const SignUp: React.FC = () => {
                   />
                 </div>
 
-                <div className="mb-6">
-                  <label
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                    htmlFor="confirm-password"
-                  >
-                    Confirm Password
-                  </label>
-                  <input
-                    id="confirm-password"
-                    type="password"
-                    className="mt-1 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-gray-800 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-                    placeholder="••••••••"
-                  />
-                </div>
-
                 <button
                   type="submit"
                   className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:ring focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600"
                 >
-                  Sign Up
+                  Login
                 </button>
               </form>
 
               <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                Already have an account?{' '}
+                Don't have an account?{' '}
                 <Link
                   className="text-blue-600 hover:underline dark:text-blue-400"
-                  to="/auth/signin"
+                  to="/auth/register"
                 >
-                  Sign In
+                  Register
                 </Link>
               </p>
             </div>
@@ -140,4 +110,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default Login;

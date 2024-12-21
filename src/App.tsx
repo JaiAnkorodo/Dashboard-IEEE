@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'; // Tambahkan Navigate
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
-import SignUp from './pages/Authentication/SignUp';
+import Login from './pages/Authentication/Login.tsx';
+import Register from './pages/Authentication/Register.tsx';
 import AchievmentPage from './pages/AchievmentPage/Achievment';
 import NewsPage from './pages/NewsPage/News';
 import RecentActivitiesPage from './pages/RecentActivitiesPage/Activities';
@@ -127,20 +127,20 @@ function App() {
           }
         />
         <Route
-          path="/auth/signin"
+          path="/auth/login"
           element={
             <>
-              <PageTitle title="Signin | IEEE Dashboard Admin" />
-              <SignIn />
+              <PageTitle title="Login | IEEE Dashboard Admin" />
+              <Login />
             </>
           }
         />
         <Route
-          path="/auth/signup"
+          path="/auth/register"
           element={
             <>
-              <PageTitle title="Signup | IEEE Dashboard Admin" />
-              <SignUp />
+              <PageTitle title="Register | IEEE Dashboard Admin" />
+              <Register />
             </>
           }
         />
