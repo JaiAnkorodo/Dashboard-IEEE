@@ -35,10 +35,10 @@ function App() {
     <DefaultLayout>
       <Routes>
         {/* Rute Default ke /achievment */}
-        <Route path="/" element={<Navigate to="/achievment" replace />} />
+        <Route path="/" element={<Navigate to="/achievements" replace />} />
 
         <Route
-          path="/achievment"
+          path="/achievements"
           element={
             <>
               <PageTitle title="Achievment | IEEE Dashboard Admin" />
@@ -83,7 +83,7 @@ function App() {
           }
         />
         <Route
-          path="/add-achievment"
+          path="/add-achievements"
           element={
             <>
               <PageTitle title="Add New Achievment | IEEE Dashboard Admin" />
@@ -119,7 +119,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-achievment/:id"
+          path="/edit-achievements/:id"
           element={
             <>
               <PageTitle title="Edit Achievment | IEEE Dashboard Admin" />

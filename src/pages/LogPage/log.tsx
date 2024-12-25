@@ -1,33 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 
 const LogPage: React.FC = () => {
-  const logs = [
-    {
-      id: 1,
-      message: 'User John updated profile',
-      timestamp: '2024-12-15 10:30 AM',
-    },
-    {
-      id: 2,
-      message: 'Admin added new product',
-      timestamp: '2024-12-14 02:45 PM',
-    },
-    {
-      id: 3,
-      message: 'User Alice signed up',
-      timestamp: '2024-12-14 01:20 PM',
-    },
-    {
-      id: 4,
-      message: 'Order #1234 was completed',
-      timestamp: '2024-12-13 09:15 AM',
-    },
-  ];
+  // Fetch logs from localStorage or use default logs
+  const getLogsFromLocalStorage = (): any[] => {
+    const storedLogs = localStorage.getItem('logs');
+    return storedLogs ? JSON.parse(storedLogs) : [];
+  };
 
+  const [logs, setLogs] = useState(getLogsFromLocalStorage());
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoggingEnabled, setIsLoggingEnabled] = useState(true); // Flag to control logging
 
-  // Filter logs berdasarkan input
+  useEffect(() => {
+    // Only update localStorage when logs are being updated and logging is enabled
+    if (isLoggingEnabled) {
+      localStorage.setItem('logs', JSON.stringify(logs));
+    }
+  }, [logs, isLoggingEnabled]);
+
+  // Automatically log a message when the user changes the search input
+  useEffect(() => {
+    if (isLoggingEnabled && searchTerm) {
+      const newLog = {
+        id: Date.now(),
+        message: `User searched for: ${searchTerm}`,
+        timestamp: new Date().toLocaleString(),
+      };
+      setLogs((prevLogs) => [...prevLogs, newLog]);
+    }
+  }, [searchTerm, isLoggingEnabled]);
+
+  // Automatically log when a user navigates to the Log Page
+  useEffect(() => {
+    if (isLoggingEnabled) {
+      const newLog = {
+        id: Date.now(),
+        message: 'User accessed the Log Page',
+        timestamp: new Date().toLocaleString(),
+      };
+      setLogs((prevLogs) => [...prevLogs, newLog]);
+    }
+  }, [isLoggingEnabled]);
+
+  // Filter logs based on search term
   const filteredLogs = logs.filter(
     (log) =>
       log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,6 +58,22 @@ const LogPage: React.FC = () => {
           <h1 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">
             Activity Log
           </h1>
+
+          {/* Toggle to enable/disable logging */}
+          <div className="flex justify-between mb-6">
+            <p className="text-lg text-black dark:text-white">
+              Enable Logging:
+            </p>
+            <button
+              onClick={() => setIsLoggingEnabled((prev) => !prev)}
+              className={`px-4 py-2 rounded-lg ${
+                isLoggingEnabled ? 'bg-green-500' : 'bg-red-500'
+              } text-white`}
+            >
+              {isLoggingEnabled ? 'Disable' : 'Enable'} Logging
+            </button>
+          </div>
+
           {/* Filter Input */}
           <div className="relative w-full mb-6">
             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -68,6 +100,7 @@ const LogPage: React.FC = () => {
               className="w-full pl-10 pr-4 py-3 border border-light-border dark:border-dark-border rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-[#6B0DE3]"
             />
           </div>
+
           {/* Log List */}
           <ul className="space-y-4">
             {filteredLogs.length > 0 ? (

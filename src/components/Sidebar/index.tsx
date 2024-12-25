@@ -105,7 +105,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* Menu Item Achievment Page */}
               <li>
                 <NavLink
-                  to="/Achievment"
+                  to="/achievements"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('log') && 'bg-graydark dark:bg-meta-4'
                   }`}
@@ -119,7 +119,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   >
                     <path d="M17 2H7C5.89 2 5 2.89 5 4V6C5 10.5 8.25 13.3 12 13.95C12 14.91 12 15.85 12 16C12 17.35 11.35 18 10 18H7V20H17V18H14C12.65 18 12 17.35 12 16C12 15.85 12 14.91 12 13.95C15.75 13.3 19 10.5 19 6V4C19 2.89 18.11 2 17 2ZM17 6C17 9.39 14.68 11.41 12 11.92C9.32 11.41 7 9.39 7 6V4H17V6Z" />
                   </svg>
-                  Achievment
+                  Achievement
                 </NavLink>
               </li>
 
