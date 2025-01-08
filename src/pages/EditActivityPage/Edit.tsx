@@ -12,7 +12,7 @@ interface Activity {
   id: number;
   title: string;
   description: string;
-  date: string; // Format: 'yyyy-MM-dd'
+  date: string;
   photo?: string;
 }
 
@@ -107,14 +107,44 @@ const EditActivityPage: React.FC = () => {
     }
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0 && activity) {
-        const file = acceptedFiles[0];
-        const fileURL = URL.createObjectURL(file);
-        setActivity({ ...activity, photo: fileURL });
+  const handleDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+
+      // Check if the file type is either PNG or JPEG
+      if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        toast.error('Only PNG, JPEG, and JPG images are allowed!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+        return;
       }
-    },
+
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result as string;
+
+        // Update the state with the base64 image
+        if (activity) {
+          setActivity({ ...activity, photo: base64Image });
+        }
+      };
+
+      // Read the file as a Data URL (base64)
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: handleDrop,
+    accept: 'image/jpeg, image/png',
   });
 
   if (!activity) return null;

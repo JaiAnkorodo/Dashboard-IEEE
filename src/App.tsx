@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, Navigate } from 'react-router-dom'; // Tambahkan Navigate
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import Login from './pages/Authentication/Login.tsx';
@@ -13,7 +13,7 @@ import AddNewsPage from './pages/AddNewsPage/Addnews';
 import EditActivityPage from './pages/EditActivityPage/Edit';
 import EditNewsPage from './pages/EditNewsPage/Edit';
 import EditAchievmentPage from './pages/EditAchievmentPage/Edit.tsx';
-import Settings from './pages/Settings';
+import Settings from './pages/Settings.tsx';
 import LogPage from './pages/LogPage/log';
 import DefaultLayout from './layout/DefaultLayout';
 

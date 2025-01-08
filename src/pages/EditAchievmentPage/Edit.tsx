@@ -3,17 +3,20 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { FaTrash } from 'react-icons/fa';
 import { useDropzone } from 'react-dropzone';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface Achievement {
   id: number;
-  title: string;
-  description: string;
-  date: string; // Format: 'yyyy-MM-dd'
+  name: string;
+  achievement: string;
+  link: string;
+  date: string;
+  category: string;
   photo?: string;
+  photoLink?: string;
 }
 
 const EditAchievementPage: React.FC = () => {
@@ -21,9 +24,12 @@ const EditAchievementPage: React.FC = () => {
   const navigate = useNavigate();
   const [achievement, setAchievement] = useState<Achievement | null>(null);
   const [errors, setErrors] = useState({
-    title: '',
-    description: '',
+    name: '',
+    achievement: '',
+    link: '',
     date: '',
+    category: '',
+    photoLink: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -48,10 +54,13 @@ const EditAchievementPage: React.FC = () => {
   const handleSubmit = () => {
     const newErrors: any = {};
 
-    if (!achievement?.title) newErrors.title = 'Title is required';
-    if (!achievement?.description)
-      newErrors.description = 'Description is required';
+    if (!achievement?.name) newErrors.name = 'Name is required';
+    if (!achievement?.achievement)
+      newErrors.achievement = 'Achievement is required';
+    if (!achievement?.link) newErrors.link = 'Link is required';
     if (!achievement?.date) newErrors.date = 'Date is required';
+    if (!achievement?.category) newErrors.category = 'Category is required';
+    if (!achievement?.photoLink) newErrors.photoLink = 'Photo link is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -60,7 +69,7 @@ const EditAchievementPage: React.FC = () => {
 
     setLoading(true);
 
-    // Update achievement in localStorage
+    // Store achievements with the base64 photo string
     const achievements = getAchievementsFromLocalStorage();
     const updatedAchievements = achievements.map((ach) =>
       ach.id === achievement?.id ? achievement : ach,
@@ -105,16 +114,44 @@ const EditAchievementPage: React.FC = () => {
     }
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        const fileURL = URL.createObjectURL(file);
-        if (achievement) {
-          setAchievement({ ...achievement, photo: fileURL });
-        }
+  const handleDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+
+      // Check if the file type is either PNG or JPEG
+      if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        toast.error('Only PNG, JPEG, and JPG images are allowed!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+        return;
       }
-    },
+
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result as string;
+
+        // Update the state with the base64 image
+        if (achievement) {
+          setAchievement({ ...achievement, photo: base64Image });
+        }
+      };
+
+      // Read the file as a Data URL (base64)
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: handleDrop,
+    accept: 'image/jpeg, image/png',
   });
 
   if (!achievement) return null;
@@ -127,42 +164,62 @@ const EditAchievementPage: React.FC = () => {
 
       {/* Kartu Full Width */}
       <div className="w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
-        {/* Title Section */}
+        {/* Name Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Title
+            Name
           </h2>
           <input
             type="text"
-            placeholder="Enter achievement title"
-            value={achievement.title}
+            placeholder="Enter achievement name"
+            value={achievement.name}
             onChange={(e) =>
-              setAchievement({ ...achievement, title: e.target.value })
+              setAchievement({ ...achievement, name: e.target.value })
             }
             className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
           />
-          {errors.title && (
-            <div className="text-red-500 text-sm mt-1">{errors.title}</div>
+          {errors.name && (
+            <div className="text-red-500 text-sm mt-1">{errors.name}</div>
           )}
         </div>
 
-        {/* Description Section */}
+        {/* Achievement Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Description
+            Achievement
           </h2>
-          <textarea
+          <input
+            type="text"
             placeholder="Enter achievement description"
-            value={achievement.description}
+            value={achievement.achievement}
             onChange={(e) =>
-              setAchievement({ ...achievement, description: e.target.value })
+              setAchievement({ ...achievement, achievement: e.target.value })
             }
-            className="w-full p-3 min-h-[120px] border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all resize-none"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
           />
-          {errors.description && (
+          {errors.achievement && (
             <div className="text-red-500 text-sm mt-1">
-              {errors.description}
+              {errors.achievement}
             </div>
+          )}
+        </div>
+
+        {/* Link Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Link
+          </h2>
+          <input
+            type="url"
+            placeholder="Enter link to achievement"
+            value={achievement.link}
+            onChange={(e) =>
+              setAchievement({ ...achievement, link: e.target.value })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          />
+          {errors.link && (
+            <div className="text-red-500 text-sm mt-1">{errors.link}</div>
           )}
         </div>
 
@@ -172,26 +229,44 @@ const EditAchievementPage: React.FC = () => {
             Date
           </h2>
           <DatePicker
-            selected={achievement.date ? new Date(achievement.date) : null}
-            onChange={(date) =>
-              setAchievement({
-                ...achievement,
-                date: date ? date.toISOString().split('T')[0] : '',
-              })
+            selected={new Date(achievement.date)}
+            onChange={(date: Date) =>
+              setAchievement({ ...achievement, date: date.toISOString() })
             }
             className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
             dateFormat="yyyy-MM-dd"
-            placeholderText="Select a date"
           />
           {errors.date && (
             <div className="text-red-500 text-sm mt-1">{errors.date}</div>
           )}
         </div>
 
+        {/* Category Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Category
+          </h2>
+          <select
+            value={achievement.category}
+            onChange={(e) =>
+              setAchievement({ ...achievement, category: e.target.value })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          >
+            <option value="">Select Category</option>
+            <option value="international">International</option>
+            <option value="national">National</option>
+            <option value="campus">Campus</option>
+          </select>
+          {errors.category && (
+            <div className="text-red-500 text-sm mt-1">{errors.category}</div>
+          )}
+        </div>
+
         {/* Image Upload Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Upload Image
+            Upload Image(JPEG/PNG)
           </h2>
           <div
             {...getRootProps()}
@@ -219,6 +294,25 @@ const EditAchievementPage: React.FC = () => {
           </div>
         )}
 
+        {/* Photo Link Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Photo Link (URL)
+          </h2>
+          <input
+            type="url"
+            placeholder="Enter URL for photo link"
+            value={achievement.photoLink || ''}
+            onChange={(e) =>
+              setAchievement({ ...achievement, photoLink: e.target.value })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          />
+          {errors.photoLink && (
+            <div className="text-red-500 text-sm mt-1">{errors.photoLink}</div>
+          )}
+        </div>
+
         <div className="flex justify-end space-x-4 mt-6">
           <button
             onClick={handleSubmit}
@@ -233,11 +327,11 @@ const EditAchievementPage: React.FC = () => {
             onMouseEnter={(e) =>
               (e.currentTarget.style.background =
                 'linear-gradient(to right, #5906BA, #6B0DE3)')
-            }
+            } // Hover effect
             onMouseLeave={(e) =>
               (e.currentTarget.style.background =
                 'linear-gradient(to right, #C0A2FE, #4E2D96)')
-            }
+            } // Reset effect
             disabled={loading}
           >
             {loading ? 'Updating...' : 'Update Achievement'}
@@ -251,7 +345,6 @@ const EditAchievementPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ToastContainer for Notifications */}
       <ToastContainer />
     </div>
   );

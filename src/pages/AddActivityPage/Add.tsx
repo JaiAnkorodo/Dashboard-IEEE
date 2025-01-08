@@ -12,7 +12,7 @@ interface Activity {
   id: number;
   title: string;
   description: string;
-  date: string; // Format: 'yyyy-MM-dd'
+  date: string;
   photo?: string;
 }
 
@@ -91,17 +91,32 @@ const AddActivityPage: React.FC = () => {
       progress: undefined,
       theme: 'dark',
     });
-    setActivity({ ...activity, photo: '' });
+    setActivity({ ...activity, photo: undefined });
+  };
+
+  const handleDrop = (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+
+    if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+      const fileURL = URL.createObjectURL(file);
+      setActivity({ ...activity, photo: fileURL });
+    } else {
+      toast.error('Only PNG, JPEG, and JPG images are allowed!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        const fileURL = URL.createObjectURL(file);
-        setActivity({ ...activity, photo: fileURL });
-      }
-    },
+    onDrop: handleDrop,
+    accept: '.png,.jpeg,.jpg',
   });
 
   return (
