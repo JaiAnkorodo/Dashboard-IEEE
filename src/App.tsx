@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, Navigate } from 'react-router-dom'; // Tambahkan Navigate
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
-import SignUp from './pages/Authentication/SignUp';
+import Login from './pages/Authentication/Login.tsx';
+import Register from './pages/Authentication/Register.tsx';
 import AchievmentPage from './pages/AchievmentPage/Achievment';
 import NewsPage from './pages/NewsPage/News';
 import RecentActivitiesPage from './pages/RecentActivitiesPage/Activities';
@@ -13,6 +13,7 @@ import AddNewsPage from './pages/AddNewsPage/Addnews';
 import EditActivityPage from './pages/EditActivityPage/Edit';
 import EditNewsPage from './pages/EditNewsPage/Edit';
 import EditAchievmentPage from './pages/EditAchievmentPage/Edit.tsx';
+import Settings from './pages/Settings.tsx';
 import LogPage from './pages/LogPage/log';
 import DefaultLayout from './layout/DefaultLayout';
 
@@ -34,10 +35,10 @@ function App() {
     <DefaultLayout>
       <Routes>
         {/* Rute Default ke /achievment */}
-        <Route path="/" element={<Navigate to="/achievment" replace />} />
+        <Route path="/" element={<Navigate to="/achievements" replace />} />
 
         <Route
-          path="/achievment"
+          path="/achievements"
           element={
             <>
               <PageTitle title="Achievment | IEEE Dashboard Admin" />
@@ -82,7 +83,7 @@ function App() {
           }
         />
         <Route
-          path="/add-achievment"
+          path="/add-achievements"
           element={
             <>
               <PageTitle title="Add New Achievment | IEEE Dashboard Admin" />
@@ -118,7 +119,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-achievment/:id"
+          path="/edit-achievements/:id"
           element={
             <>
               <PageTitle title="Edit Achievment | IEEE Dashboard Admin" />
@@ -127,20 +128,29 @@ function App() {
           }
         />
         <Route
-          path="/auth/signin"
+          path="/settings"
           element={
             <>
-              <PageTitle title="Signin | IEEE Dashboard Admin" />
-              <SignIn />
+              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Settings />
             </>
           }
         />
         <Route
-          path="/auth/signup"
+          path="/auth/login"
           element={
             <>
-              <PageTitle title="Signup | IEEE Dashboard Admin" />
-              <SignUp />
+              <PageTitle title="Login | IEEE Dashboard Admin" />
+              <Login />
+            </>
+          }
+        />
+        <Route
+          path="/auth/register"
+          element={
+            <>
+              <PageTitle title="Register | IEEE Dashboard Admin" />
+              <Register />
             </>
           }
         />

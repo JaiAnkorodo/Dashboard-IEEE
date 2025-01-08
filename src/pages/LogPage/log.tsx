@@ -65,7 +65,7 @@ const LogPage: React.FC = () => {
               placeholder="Search logs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-light-border dark:border-dark-border rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-3 border border-light-border dark:border-dark-border rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-[#6B0DE3]"
             />
           </div>
           {/* Log List */}
