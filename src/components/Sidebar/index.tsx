@@ -2,6 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/logo.png';
+import {
+  FaTrophy,
+  FaNewspaper,
+  FaHistory,
+  FaQuestionCircle,
+  FaTrashAlt,
+  FaUserShield,
+} from 'react-icons/fa';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -102,7 +110,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* Menu Item Achievment Page */}
               <li>
                 <NavLink
                   to="/achievements"
@@ -111,20 +118,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     'bg-graydark dark:bg-meta-4'
                   }`}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM6 13.6c-2.8 1.3-4 3.1-4 5.4h2c0-1.4 1-2.6 3-3.5v-1.9Zm12 0v1.9c2 1 3 2.1 3 3.5h2c0-2.3-1.2-4.1-4-5.4ZM12 14c-1.7 0-3 .3-4.2.9a7.1 7.1 0 0 0-1.5 1.1c-.4.3-.8.8-.8 1.5h12c0-.7-.4-1.2-.8-1.5-.4-.3-.9-.8-1.5-1.1C15 14.3 13.7 14 12 14Zm-3 5H9v3l3-1.5L15 22v-3h-1v1.7l-2-.9-2 .9V19Z" />
-                  </svg>
+                  <FaTrophy size={20} />
                   Achievement
                 </NavLink>
               </li>
 
-              {/* Menu Item News Page */}
               <li>
                 <NavLink
                   to="/news"
@@ -132,21 +130,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     pathname.includes('news') && 'bg-graydark dark:bg-meta-4'
                   }`}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="currentColor"
-                  >
-                    <path d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm18 0H4v14h16V4ZM6 6h8v2H6V6Zm0 4h8v2H6v-2Zm0 4h4v2H6v-2Z" />
-                    <path d="M16 10h4v6h-4v-6Z" />
-                  </svg>
+                  <FaNewspaper size={20} />
                   News
                 </NavLink>
               </li>
 
-              {/* <!-- Menu Item Recent Activities --> */}
               <li>
                 <NavLink
                   to="/recent-activities"
@@ -155,37 +143,32 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     'bg-graydark dark:bg-meta-4'
                   }`}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="currentColor"
-                  >
-                    <path d="M11 1.75A9.25 9.25 0 1 0 20.25 11a.75.75 0 0 1 1.5 0A10.75 10.75 0 1 1 11 .25a.75.75 0 0 1 0 1.5ZM21 5.5a.75.75 0 0 1 0 1.06l-8.25 8.25a.75.75 0 0 1-1.06 0L7.25 10.06a.75.75 0 1 1 1.06-1.06l4.19 4.19L19.94 5.5a.75.75 0 0 1 1.06 0Z" />
-                  </svg>
+                  <FaHistory size={20} />
                   Recent Activities
                 </NavLink>
               </li>
 
-              {/* Menu Item Log Page */}
               <li>
                 <NavLink
-                  to="/log"
+                  to="/faq"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('log') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('faq') && 'bg-graydark dark:bg-meta-4'
                   }`}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="currentColor"
-                  >
-                    <path d="M6 2C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2H6ZM13 9V3.5L18.5 9H13ZM6 20V4H12V10H18V20H6ZM8 12H16V14H8V12ZM8 16H14V18H8V16Z" />
-                  </svg>
-                  Log
+                  <FaQuestionCircle size={20} />
+                  FAQ
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/trash"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('trash') && 'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <FaTrashAlt size={20} />
+                  Trash
                 </NavLink>
               </li>
             </ul>
@@ -220,35 +203,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             : setSidebarExpanded(true);
                         }}
                       >
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="19"
-                          viewBox="0 0 18 19"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_130_9814)">
-                            <path
-                              d="M12.7127 0.55835H9.53457C8.80332 0.55835 8.18457 1.1771 8.18457 1.90835V3.84897C8.18457 4.18647 8.46582 4.46772 8.80332 4.46772C9.14082 4.46772 9.45019 4.18647 9.45019 3.84897V1.88022C9.45019 1.82397 9.47832 1.79585 9.53457 1.79585H12.7127C13.3877 1.79585 13.9221 2.33022 13.9221 3.00522V15.0709C13.9221 15.7459 13.3877 16.2802 12.7127 16.2802H9.53457C9.47832 16.2802 9.45019 16.2521 9.45019 16.1959V14.2552C9.45019 13.9177 9.16894 13.6365 8.80332 13.6365C8.43769 13.6365 8.18457 13.9177 8.18457 14.2552V16.1959C8.18457 16.9271 8.80332 17.5459 9.53457 17.5459H12.7127C14.0908 17.5459 15.1877 16.4209 15.1877 15.0709V3.03335C15.1877 1.65522 14.0627 0.55835 12.7127 0.55835Z"
-                              fill=""
-                            />
-                            <path
-                              d="M10.4346 8.60205L7.62207 5.7333C7.36895 5.48018 6.97519 5.48018 6.72207 5.7333C6.46895 5.98643 6.46895 6.38018 6.72207 6.6333L8.46582 8.40518H3.45957C3.12207 8.40518 2.84082 8.68643 2.84082 9.02393C2.84082 9.36143 3.12207 9.64268 3.45957 9.64268H8.49395L6.72207 11.4427C6.46895 11.6958 6.46895 12.0896 6.72207 12.3427C6.83457 12.4552 7.00332 12.5114 7.17207 12.5114C7.34082 12.5114 7.50957 12.4552 7.62207 12.3145L10.4346 9.4458C10.6877 9.24893 10.6877 8.85518 10.4346 8.60205Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_130_9814">
-                              <rect
-                                width="18"
-                                height="18"
-                                fill="white"
-                                transform="translate(0 0.052124)"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                        {/* Ganti SVG dengan FaUserShield */}
+                        <FaUserShield size={20} className="text-bodydark1" />
                         Authentication
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
@@ -268,7 +224,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
+                      {/* Dropdown Menu */}
                       <div
                         className={`translate transform overflow-hidden ${
                           !open && 'hidden'
@@ -299,11 +255,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div>
-                      {/* <!-- Dropdown Menu End --> */}
                     </React.Fragment>
                   );
                 }}
               </SidebarLinkGroup>
+
               {/* <!-- Menu Item Auth Pages --> */}
             </ul>
           </div>

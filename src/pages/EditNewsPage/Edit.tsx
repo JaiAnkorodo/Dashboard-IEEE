@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaTrash } from 'react-icons/fa'; // Import FaTrash
+import { FaTrash } from 'react-icons/fa';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import 'react-quill/dist/quill.snow.css';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css'; // Import Date Picker styles
-import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
+import 'react-datepicker/dist/react-datepicker.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface News {
   id: number;
@@ -17,18 +17,17 @@ interface News {
   category: string;
   photo?: string;
   author?: string;
-  link?: string; // Add link property
+  link?: string;
+  status: 'draft' | 'published';
 }
 
 const EditNewsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [news, setNews] = useState<News | null>(null);
-  const [isDarkMode] = useState(false);
-  const [errors, setErrors] = useState<any>({}); // Track validation errors
+  const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
-    // Fetch the news item from localStorage using the `id` from URL params
     const storedNews = localStorage.getItem('news');
     const newsList: News[] = storedNews ? JSON.parse(storedNews) : [];
     const currentNews = newsList.find((news) => news.id === parseInt(id!));
@@ -41,14 +40,14 @@ const EditNewsPage: React.FC = () => {
       const file = event.target.files[0];
       const fileType = file.type;
 
-      // Validate file type (JPEG, PNG, JPG)
       if (
         fileType !== 'image/jpeg' &&
         fileType !== 'image/png' &&
-        fileType !== 'image/jpg'
+        fileType !== 'image/jpg' &&
+        file.type !== 'image/webp'
       ) {
-        toast.error('Only JPG, JPEG, and PNG images are allowed!');
-        return; // Prevent file upload if invalid type
+        toast.error('Only PNG, JPEG, JPG, and WEBP images are allowed!');
+        return;
       }
 
       const reader = new FileReader();
@@ -71,7 +70,8 @@ const EditNewsPage: React.FC = () => {
     if (!news?.description) newErrors.description = 'Description is required';
     if (!news?.date) newErrors.date = 'Date is required';
     if (!news?.author) newErrors.author = 'Author is required';
-    if (!news?.photo) newErrors.photo = 'Image is required'; // Add this check for image
+    if (!news?.photo) newErrors.photo = 'Image is required';
+    if (!news?.status) newErrors.status = 'Status is required';
     return newErrors;
   };
 
@@ -93,16 +93,16 @@ const EditNewsPage: React.FC = () => {
 
     const updatedNews = {
       ...news,
-      date: newsDate.toISOString().split('T')[0], // Convert to ISO string
+      date: newsDate.toISOString().split('T')[0],
     };
 
     const storedNews = localStorage.getItem('news');
     const newsList: News[] = storedNews ? JSON.parse(storedNews) : [];
-    const index = newsList.findIndex((item) => item.id === news.id);
-    if (index !== -1) {
-      newsList[index] = updatedNews;
-      localStorage.setItem('news', JSON.stringify(newsList));
-    }
+    const updatedNewsList = newsList.map((item) =>
+      item.id === news.id ? updatedNews : item,
+    );
+
+    localStorage.setItem('news', JSON.stringify(updatedNewsList));
 
     // Show success toast
     toast.success('News updated successfully!');
@@ -110,7 +110,7 @@ const EditNewsPage: React.FC = () => {
     // Add a delay before navigating
     setTimeout(() => {
       navigate('/news');
-    }, 1000); // Adjust the delay time (in milliseconds) as needed
+    }, 1000);
   };
 
   // Custom toolbar configuration with image option
@@ -122,7 +122,7 @@ const EditNewsPage: React.FC = () => {
       ['link'],
       [{ align: [] }],
       ['blockquote', 'code-block'],
-      ['image'], // Adding image button
+      ['image'],
     ],
   };
 
@@ -134,7 +134,6 @@ const EditNewsPage: React.FC = () => {
         <Breadcrumb pageName="Edit News" />
       </div>
 
-      {/* White Card for Input Fields */}
       <div className="w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
         {/* Title */}
         <div className="mb-4">
@@ -176,6 +175,26 @@ const EditNewsPage: React.FC = () => {
           </select>
         </div>
 
+        {/* Status */}
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            Status
+          </label>
+          <select
+            value={news.status}
+            onChange={(e) =>
+              setNews({
+                ...news,
+                status: e.target.value as 'published' | 'draft',
+              })
+            }
+            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-gray-300"
+          >
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+
         {/* Image Upload */}
         <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700 rounded-md overflow-hidden mb-4">
           {news.photo ? (
@@ -185,7 +204,7 @@ const EditNewsPage: React.FC = () => {
                 alt="Uploaded"
                 className="w-full h-full object-cover"
               />
-              {/* Trash Icon to delete the image */}
+
               <button
                 onClick={handleImageDelete}
                 className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-200"
@@ -241,49 +260,51 @@ const EditNewsPage: React.FC = () => {
           )}
         </div>
 
-        {/* Content Block (React Quill Editor with Custom Toolbar) */}
         <div className="space-y-4 mb-4">
           <ReactQuill
             value={news.description}
             onChange={(content) => setNews({ ...news, description: content })}
             placeholder="Enter content here..."
             modules={modules}
-            className="border p-4 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500"
+            className="border p-4 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 overflow-auto"
           />
           {errors.description && (
             <p className="text-red-500 text-sm mt-2">{errors.description}</p>
           )}
         </div>
+
+        <div className="flex justify-end space-x-6 mt-8">
+          <button
+            onClick={handleSaveNews}
+            className="px-6 py-3"
+            style={{
+              background: 'linear-gradient(to right, #C0A2FE, #4E2D96)',
+              color: 'white',
+              borderRadius: '0.375rem',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+              transition: 'background-color 0.3s',
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #5906BA, #6B0DE3)')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #C0A2FE, #4E2D96)')
+            }
+          >
+            Update News
+          </button>
+          <button
+            onClick={() => navigate('/news')}
+            className="px-6 py-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 transition-all"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
 
-      <div className="flex justify-end space-x-6 mt-8">
-        <button
-          onClick={handleSaveNews}
-          className="px-8 py-3 text-lg font-semibold bg-gradient-to-r from-[#C0A2FE] to-[#4E2D96] text-white rounded-lg shadow-md hover:from-[#4E2D96] hover:to-[#C0A2FE] transition-all"
-        >
-          Save News
-        </button>
-        <button
-          onClick={() => navigate('/news')}
-          className="px-8 py-3 text-lg font-semibold bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-400 transition-all"
-        >
-          Cancel
-        </button>
-      </div>
-
-      {/* Toast Container */}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={isDarkMode ? 'dark' : 'light'}
-      />
+      <ToastContainer />
     </div>
   );
 };

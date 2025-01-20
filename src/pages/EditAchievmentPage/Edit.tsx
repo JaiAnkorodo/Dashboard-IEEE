@@ -17,6 +17,7 @@ interface Achievement {
   category: string;
   photo?: string;
   photoLink?: string;
+  status: 'Draft' | 'Published';
 }
 
 const EditAchievementPage: React.FC = () => {
@@ -118,9 +119,12 @@ const EditAchievementPage: React.FC = () => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
 
-      // Check if the file type is either PNG or JPEG
-      if (!['image/jpeg', 'image/png'].includes(file.type)) {
-        toast.error('Only PNG, JPEG, and JPG images are allowed!', {
+      if (
+        !['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(
+          file.type,
+        )
+      ) {
+        toast.error('Only PNG, JPEG, JPG, and WebP images are allowed!', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: true,
@@ -133,25 +137,21 @@ const EditAchievementPage: React.FC = () => {
         return;
       }
 
-      // Convert image to base64
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result as string;
 
-        // Update the state with the base64 image
         if (achievement) {
           setAchievement({ ...achievement, photo: base64Image });
         }
       };
-
-      // Read the file as a Data URL (base64)
       reader.readAsDataURL(file);
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
-    accept: 'image/jpeg, image/png',
+    accept: 'image/jpeg, image/png, image/jpg ,image/webp',
   });
 
   if (!achievement) return null;
@@ -254,9 +254,9 @@ const EditAchievementPage: React.FC = () => {
             className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
           >
             <option value="">Select Category</option>
-            <option value="international">International</option>
-            <option value="national">National</option>
-            <option value="campus">Campus</option>
+            <option value="International">International</option>
+            <option value="National">National</option>
+            <option value="Campus">Campus</option>
           </select>
           {errors.category && (
             <div className="text-red-500 text-sm mt-1">{errors.category}</div>
@@ -266,7 +266,7 @@ const EditAchievementPage: React.FC = () => {
         {/* Image Upload Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Upload Image(JPEG/PNG)
+            Upload Image(JPEG/PNG/JPG/WEBP)
           </h2>
           <div
             {...getRootProps()}
@@ -311,6 +311,26 @@ const EditAchievementPage: React.FC = () => {
           {errors.photoLink && (
             <div className="text-red-500 text-sm mt-1">{errors.photoLink}</div>
           )}
+        </div>
+
+        {/* Status Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Status
+          </h2>
+          <select
+            value={achievement.status}
+            onChange={(e) =>
+              setAchievement({
+                ...achievement,
+                status: e.target.value as 'Draft' | 'Published',
+              })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          >
+            <option value="Draft">Draft</option>
+            <option value="Published">Published</option>
+          </select>
         </div>
 
         <div className="flex justify-end space-x-4 mt-6">

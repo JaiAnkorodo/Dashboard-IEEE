@@ -14,6 +14,7 @@ interface Activity {
   description: string;
   date: string;
   photo?: string;
+  status: 'draft' | 'published';
 }
 
 const AddActivityPage: React.FC = () => {
@@ -24,6 +25,7 @@ const AddActivityPage: React.FC = () => {
     description: '',
     date: '',
     photo: '',
+    status: 'draft',
   });
   const [errors, setErrors] = useState({
     title: '',
@@ -37,14 +39,15 @@ const AddActivityPage: React.FC = () => {
     return storedActivities ? JSON.parse(storedActivities) : [];
   };
 
-  const saveToLocalStorage = (activity: Activity) => {
+  const saveToLocalStorage = (newActivity: Activity) => {
     const activities = getActivitiesFromLocalStorage();
-    activities.push(activity);
+    activities.push(newActivity);
     localStorage.setItem('activities', JSON.stringify(activities));
   };
 
   const handleSubmit = () => {
-    const newErrors: any = {};
+    const newErrors: { title?: string; description?: string; date?: string } =
+      {};
 
     if (!activity.title) newErrors.title = 'Title is required';
     if (!activity.description)
@@ -71,8 +74,17 @@ const AddActivityPage: React.FC = () => {
     });
 
     setTimeout(() => {
-      navigate('/recent-activities');
       setLoading(false);
+      setActivity({
+        id: Date.now(),
+        title: '',
+        description: '',
+        date: '',
+        photo: '',
+        status: 'draft',
+      });
+      setErrors({}); // Reset errors
+      navigate('/recent-activities');
     }, 1000);
   };
 
@@ -80,49 +92,51 @@ const AddActivityPage: React.FC = () => {
     navigate('/recent-activities');
   };
 
-  const handleDeletePhoto = () => {
-    toast.info('Photo deleted successfully!', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'dark',
-    });
-    setActivity({ ...activity, photo: undefined });
-  };
-
   const handleDrop = (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
 
-    if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
-      const fileURL = URL.createObjectURL(file);
-      setActivity({ ...activity, photo: fileURL });
-    } else {
-      toast.error('Only PNG, JPEG, and JPG images are allowed!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      if (
+        !['image/jpeg', 'image/png', 'image/webp', 'image/webp'].includes(
+          file.type,
+        )
+      ) {
+        toast.error('Only PNG, JPEG, JPG, and WEBP images are allowed!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result as string;
+
+        setActivity({ ...activity, photo: base64Image });
+      };
+
+      reader.readAsDataURL(file);
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
-    accept: '.png,.jpeg,.jpg',
+    accept: 'image/jpeg, image/png, image/webp, image/jpg',
   });
 
   return (
     <div className="p-6 bg-light-background dark:bg-dark-background min-h-screen">
-      <Breadcrumb pageName="Add New Activity" />
+      <div className="mb-6">
+        <Breadcrumb pageName="Add Activity" />
+      </div>
 
+      {/* Full Width Card */}
       <div className="w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
         {/* Title Section */}
         <div>
@@ -185,7 +199,27 @@ const AddActivityPage: React.FC = () => {
           )}
         </div>
 
-        {/* Drag & Drop Image Upload Section */}
+        {/* Status Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Status
+          </h2>
+          <select
+            value={activity.status}
+            onChange={(e) =>
+              setActivity({
+                ...activity,
+                status: e.target.value as 'draft' | 'published',
+              })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+
+        {/* Image Upload Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
             Upload Image
@@ -200,6 +234,7 @@ const AddActivityPage: React.FC = () => {
         </div>
 
         {/* Image Preview Section */}
+        {/* Image Preview Section */}
         {activity.photo && (
           <div className="mt-4 relative">
             <img
@@ -208,10 +243,11 @@ const AddActivityPage: React.FC = () => {
               className="w-full max-h-80 object-cover rounded-lg transition-all"
             />
             <button
-              onClick={handleDeletePhoto}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700 p-2 bg-white rounded-full shadow-md"
+              onClick={() => setActivity({ ...activity, photo: '' })}
+              className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all"
+              aria-label="Delete Photo"
             >
-              <FaTrash size={24} />
+              <FaTrash />
             </button>
           </div>
         )}
@@ -230,12 +266,11 @@ const AddActivityPage: React.FC = () => {
             onMouseEnter={
               (e) =>
                 (e.currentTarget.style.background =
-                  'linear-gradient(to right, #5906BA, #6B0DE3)') // Hover gradient
+                  'linear-gradient(to right, #5906BA, #6B0DE3)') // Darker purple on hover
             }
-            onMouseLeave={
-              (e) =>
-                (e.currentTarget.style.background =
-                  'linear-gradient(to right, #C0A2FE, #4E2D96)') // Reset gradient
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #C0A2FE, #4E2D96)')
             }
             disabled={loading}
           >

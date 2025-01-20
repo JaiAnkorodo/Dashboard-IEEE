@@ -14,6 +14,7 @@ interface Activity {
   description: string;
   date: string;
   photo?: string;
+  status: 'draft' | 'published';
 }
 
 const EditActivityPage: React.FC = () => {
@@ -66,7 +67,6 @@ const EditActivityPage: React.FC = () => {
       act.id === activity?.id ? activity : act,
     );
 
-    // Simpan updatedActivities ke localStorage
     localStorage.setItem('activities', JSON.stringify(updatedActivities));
 
     toast.success('Activity updated successfully!', {
@@ -112,8 +112,12 @@ const EditActivityPage: React.FC = () => {
       const file = acceptedFiles[0];
 
       // Check if the file type is either PNG or JPEG
-      if (!['image/jpeg', 'image/png'].includes(file.type)) {
-        toast.error('Only PNG, JPEG, and JPG images are allowed!', {
+      if (
+        !['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(
+          file.type,
+        )
+      ) {
+        toast.error('Only PNG, JPEG, JPG,AND WEBP images are allowed!', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: true,
@@ -126,25 +130,22 @@ const EditActivityPage: React.FC = () => {
         return;
       }
 
-      // Convert image to base64
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result as string;
 
-        // Update the state with the base64 image
         if (activity) {
           setActivity({ ...activity, photo: base64Image });
         }
       };
 
-      // Read the file as a Data URL (base64)
       reader.readAsDataURL(file);
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
-    accept: 'image/jpeg, image/png',
+    accept: 'image/jpeg, image/png, image/jpg, image/webp',
   });
 
   if (!activity) return null;
@@ -218,6 +219,26 @@ const EditActivityPage: React.FC = () => {
           )}
         </div>
 
+        {/* Status Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Status
+          </h2>
+          <select
+            value={activity.status}
+            onChange={(e) =>
+              setActivity({
+                ...activity,
+                status: e.target.value as 'draft' | 'published',
+              })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+
         {/* Image Upload Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
@@ -232,7 +253,6 @@ const EditActivityPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Image Preview Section */}
         {activity.photo && (
           <div className="mt-4 relative">
             <img
@@ -242,9 +262,9 @@ const EditActivityPage: React.FC = () => {
             />
             <button
               onClick={handleDeletePhoto}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700 p-2 bg-white rounded-full shadow-md"
+              className="absolute top-2 right-2 text-white bg-red-600 p-2 rounded-full"
             >
-              <FaTrash size={24} />
+              <FaTrash />
             </button>
           </div>
         )}
@@ -254,16 +274,15 @@ const EditActivityPage: React.FC = () => {
             onClick={handleSubmit}
             className="px-6 py-3"
             style={{
-              background: 'linear-gradient(to right, #C0A2FE, #4E2D96)', // Gradient purple
+              background: 'linear-gradient(to right, #C0A2FE, #4E2D96)',
               color: 'white',
-              borderRadius: '0.375rem', // Rounded-lg
-              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Shadow-md
+              borderRadius: '0.375rem',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
               transition: 'background-color 0.3s',
             }}
-            onMouseEnter={
-              (e) =>
-                (e.currentTarget.style.background =
-                  'linear-gradient(to right, #5906BA, #6B0DE3)') // Darker purple on hover
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #5906BA, #6B0DE3)')
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.background =
@@ -282,7 +301,6 @@ const EditActivityPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ToastContainer for Notifications */}
       <ToastContainer />
     </div>
   );

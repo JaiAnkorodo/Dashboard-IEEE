@@ -1,67 +1,83 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useUser } from '../../contexts/UserContext';
 import { Link } from 'react-router-dom';
-import ClickOutside from '../ClickOutside';
 import { FaCog, FaSignOutAlt } from 'react-icons/fa';
-import UserOne from '../../images/user/asep.png';
 
 const DropdownUser = () => {
+  const { user } = useUser();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleDropdown = useCallback(() => {
-    setDropdownOpen((prev) => !prev);
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+
+  const closeDropdown = () => setDropdownOpen(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
   }, []);
 
-  const closeDropdown = useCallback(() => {
-    setDropdownOpen(false);
-  }, []);
+  if (!user) return null;
 
   return (
-    <ClickOutside onClick={closeDropdown} className="relative">
-      <button onClick={toggleDropdown} className="flex items-center gap-4">
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={toggleDropdown}
+        className="flex items-center gap-4 p-2 rounded-lg transition-all hover:bg-gray-50 dark:hover:bg-gray-900"
+      >
         <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
-            Asep Jamaludin
+          <span className="block text-sm font-medium text-gray-800 dark:text-white">
+            {user.name}
           </span>
-          <span className="block text-xs">IEEE SB | IT</span>
+          <span className="block text-xs font-medium text-gray-800 dark:text-white">
+            IEEE SB | IT
+          </span>
         </span>
-
-        <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+        <span className="h-12 w-12 rounded-full overflow-hidden">
+          <img
+            src={user.photo}
+            alt="User"
+            className="object-cover w-full h-full"
+          />
         </span>
-
-        <svg
-          className="hidden fill-current sm:block"
-          width="12"
-          height="8"
-          viewBox="0 0 12 8"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M0.41 0.91a1.1 1.1 0 011.58 0L6 5.32l4.41-4.41a1.1 1.1 0 111.58 1.58L6.59 7.09a1.1 1.1 0 01-1.58 0L0.41 2.49a1.1 1.1 0 010-1.58z" />
-        </svg>
       </button>
 
       {dropdownOpen && (
-        <div
-          className={`absolute right-0 mt-4 flex w-64 flex-col rounded-sm border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark`}
-        >
-          <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+        <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg ring-1 ring-gray-300 dark:ring-gray-600">
+          <ul className="py-2">
             <li>
               <Link
                 to="/settings"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-purple-600 lg:text-base"
+                className="flex items-center gap-3 px-4 py-2 hover:bg-purple-600 hover:text-white rounded-lg transition-all"
+                onClick={closeDropdown}
               >
                 <FaCog className="text-lg" />
                 Settings
               </Link>
             </li>
           </ul>
-          <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium text-left text-red-500 hover:bg-gray-100 dark:hover:bg-gray-800 lg:text-base">
+          <button
+            className="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:text-white rounded-lg transition-all"
+            onClick={closeDropdown}
+          >
             <FaSignOutAlt className="text-lg" />
             Logout
           </button>
         </div>
       )}
-    </ClickOutside>
+    </div>
   );
 };
 

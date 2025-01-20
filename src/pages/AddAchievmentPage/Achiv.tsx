@@ -17,6 +17,7 @@ interface Achievement {
   category: string;
   photo?: string;
   photoLink?: string;
+  status: 'Draft' | 'Published';
 }
 
 const AddAchievementPage: React.FC = () => {
@@ -30,6 +31,7 @@ const AddAchievementPage: React.FC = () => {
     category: '',
     photo: '',
     photoLink: '',
+    status: 'Draft',
   });
   const [errors, setErrors] = useState({
     name: '',
@@ -37,6 +39,7 @@ const AddAchievementPage: React.FC = () => {
     link: '',
     date: '',
     category: '',
+    photoLink: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -60,6 +63,7 @@ const AddAchievementPage: React.FC = () => {
     if (!achievement.link) newErrors.link = 'Link is required';
     if (!achievement.date) newErrors.date = 'Date is required';
     if (!achievement.category) newErrors.category = 'Category is required';
+    if (!achievement?.photoLink) newErrors.photoLink = 'Photo link is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -108,11 +112,17 @@ const AddAchievementPage: React.FC = () => {
   const handleDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
 
-    if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+    if (
+      file &&
+      (file.type === 'image/png' ||
+        file.type === 'image/jpeg' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/webp')
+    ) {
       const fileURL = URL.createObjectURL(file);
       setAchievement({ ...achievement, photo: fileURL });
     } else {
-      toast.error('Only PNG, JPEG, and JPG images are allowed!', {
+      toast.error('Only PNG, JPEG, JPG, and WEBP images are allowed!', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: true,
@@ -127,7 +137,7 @@ const AddAchievementPage: React.FC = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
-    accept: '.png,.jpeg,.jpg',
+    accept: '.png,.jpeg,.jpg,.webp',
   });
 
   const isValidDate = (date: string): boolean =>
@@ -211,7 +221,7 @@ const AddAchievementPage: React.FC = () => {
             onChange={(date) =>
               setAchievement({
                 ...achievement,
-                date: date ? date.toISOString().split('T')[0] : '', // Format as 'yyyy-MM-dd'
+                date: date ? date.toISOString().split('T')[0] : '',
               })
             }
             className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
@@ -248,7 +258,7 @@ const AddAchievementPage: React.FC = () => {
         {/* Drag & Drop Image Upload Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Upload Image (JPEG/PNG)
+            Upload Image (JPEG/PNG/JPG/WEBP)
           </h2>
           <div
             {...getRootProps()}
@@ -290,6 +300,28 @@ const AddAchievementPage: React.FC = () => {
             }
             className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
           />
+          {errors.photoLink && (
+            <div className="text-red-500 text-sm mt-1">{errors.photoLink}</div>
+          )}
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Status
+          </h2>
+          <select
+            value={achievement.status}
+            onChange={(e) =>
+              setAchievement({
+                ...achievement,
+                status: e.target.value as 'Draft' | 'Published',
+              })
+            }
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
+          >
+            <option value="Draft">Draft</option>
+            <option value="Published">Published</option>
+          </select>
         </div>
 
         <div className="flex justify-end space-x-4 mt-6">
@@ -297,21 +329,19 @@ const AddAchievementPage: React.FC = () => {
             onClick={handleSubmit}
             className="px-6 py-3"
             style={{
-              background: 'linear-gradient(to right, #C0A2FE, #4E2D96)', // Gradient purple
+              background: 'linear-gradient(to right, #C0A2FE, #4E2D96)',
               color: 'white',
-              borderRadius: '0.375rem', // Rounded-lg
-              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Shadow-md
+              borderRadius: '0.375rem',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
               transition: 'background-color 0.3s',
             }}
-            onMouseEnter={
-              (e) =>
-                (e.currentTarget.style.background =
-                  'linear-gradient(to right, #5906BA, #6B0DE3)') // Hover gradient
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #5906BA, #6B0DE3)')
             }
-            onMouseLeave={
-              (e) =>
-                (e.currentTarget.style.background =
-                  'linear-gradient(to right, #C0A2FE, #4E2D96)') // Reset gradient
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #C0A2FE, #4E2D96)')
             }
             disabled={loading}
           >
