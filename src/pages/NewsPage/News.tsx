@@ -202,14 +202,24 @@ const NewsPage: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownVisible(!isDropdownVisible)}
-              className="flex items-center text-white rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-lg"
+              className="flex items-center text-gray-700 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md"
               style={{
-                background: 'linear-gradient(45deg, #C0A2FE, #4E2D96)',
+                backgroundColor: '#f5f5f5', // Warna latar belakang abu-abu muda
+                border: '2px solid #dcdcdc', // Border abu-abu muda
+                outline: 'none',
+                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#a1a1a1'; // Border lebih gelap saat hover
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#dcdcdc'; // Kembalikan border ke abu-abu muda setelah hover
               }}
             >
               <FaChevronDown className="mr-2" />
               Status
             </button>
+
             {isDropdownVisible && (
               <div
                 id="status-dropdown"

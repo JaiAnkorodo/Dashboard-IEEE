@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import ReCAPTCHA from 'react-google-recaptcha';
 import IEEELogo from '../../images/logo/logo.png';
 
 const Login: React.FC = () => {
+  const [isCaptchaVerified, setCaptchaVerified] = useState(false);
+
+  const handleCaptchaChange = (value: string | null) => {
+    if (value) {
+      setCaptchaVerified(true);
+    } else {
+      setCaptchaVerified(false);
+    }
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!isCaptchaVerified) {
+      alert('Please complete the CAPTCHA verification.');
+      return;
+    }
+
+    // Proses login di sini
+    alert('Login successful!');
+  };
+
   return (
     <>
       <Breadcrumb pageName="Login" />
 
-      <div className="min-h-screen bg-gradient-to-br  dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
         <div className="flex flex-col md:flex-row h-full w-full">
           {/* Left Section */}
           <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gradient-to-tr from-[#C0A2FE] to-[#4E2D96] p-10 text-white">
@@ -30,7 +53,7 @@ const Login: React.FC = () => {
               Enter your credentials to access the dashboard.
             </p>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-6">
                 <label
                   htmlFor="email"
@@ -59,9 +82,22 @@ const Login: React.FC = () => {
                   placeholder="••••••••"
                 />
               </div>
+
+              <div className="mb-6">
+                <ReCAPTCHA
+                  sitekey="YOUR_SITE_KEY" // nanti di ganti
+                  onChange={handleCaptchaChange}
+                />
+              </div>
+
               <button
                 type="submit"
-                className="w-full rounded-lg bg-[#6B0DE3] px-4 py-2 text-white hover:bg-purple-700 focus:ring-2 focus:ring-[#C0A2FE] dark:bg-[#6B0DE3] dark:hover:bg-purple-600"
+                disabled={!isCaptchaVerified}
+                className={`w-full rounded-lg px-4 py-2 text-white ${
+                  isCaptchaVerified
+                    ? 'bg-[#6B0DE3] hover:bg-purple-700 focus:ring-2 focus:ring-[#C0A2FE] dark:bg-[#6B0DE3] dark:hover:bg-purple-600'
+                    : 'bg-gray-400 cursor-not-allowed'
+                }`}
               >
                 Login
               </button>

@@ -281,7 +281,7 @@ const AddNewsPage: React.FC = () => {
           </button>
           <button
             onClick={() => navigate('/news')}
-            className="px-6 py-3 bg-gray-500 text-white rounded-lg shadow-md"
+            className="px-6 py-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 transition-all"
           >
             Cancel
           </button>

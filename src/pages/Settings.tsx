@@ -214,7 +214,22 @@ const Settings = () => {
         <div className="flex justify-end space-x-4 mt-6">
           <button
             onClick={handleSave}
-            className="px-6 py-3 bg-gradient-to-r from-purple-300 via-purple-500 to-purple-700 text-white rounded-lg shadow-md hover:bg-purple-600 transition-all"
+            className="px-6 py-3"
+            style={{
+              background: 'linear-gradient(to right, #C0A2FE, #4E2D96)',
+              color: 'white',
+              borderRadius: '0.375rem',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+              transition: 'background-color 0.3s',
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #5906BA, #6B0DE3)')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background =
+                'linear-gradient(to right, #C0A2FE, #4E2D96)')
+            }
           >
             Save Change
           </button>
