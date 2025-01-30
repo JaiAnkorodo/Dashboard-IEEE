@@ -129,18 +129,25 @@ const AchievementPage: React.FC = () => {
   };
 
   const deleteAchievement = (id: number) => {
+    const achievementToDelete = achievements.find(
+      (achievement) => achievement.id === id,
+    );
+
+    if (!achievementToDelete) {
+      toast.error('Achievements item not found!');
+      return;
+    }
+
     if (!toast.isActive('delete-notification')) {
       toast.info(
         <div>
-          <p>Are you sure you want to delete this achievement?</p>
+          <p>
+            Are you you want to move the achievement{' '}
+            <strong>{achievementToDelete?.name}</strong> to Trash?
+          </p>
           <div className="flex justify-end mt-2">
             <button
               onClick={() => {
-                const achievementToDelete = achievements.find(
-                  (achievement) => achievement.id === id,
-                );
-                if (!achievementToDelete) return;
-
                 const updatedAchievements = achievements.filter(
                   (item) => item.id !== id,
                 );
@@ -154,16 +161,18 @@ const AchievementPage: React.FC = () => {
                 trash.push({ ...achievementToDelete, type: 'achievement' });
                 localStorage.setItem('trash', JSON.stringify(trash));
 
-                toast.dismiss();
-                toast.success('News moved to Trash successfully!');
+                toast.dismiss('delete-notification');
+                toast.success(
+                  `${achievementToDelete.name} moved to Trash successfully!`,
+                );
               }}
-              className="px-3 py-1 bg-red-600 text-white rounded mr-2"
+              className="px-3 py-1 bg-red-600 text-white rounded mr-2 transition-transform transform hover:scale-105 hover:bg-red-700"
             >
               Yes
             </button>
             <button
-              onClick={() => toast.dismiss()}
-              className="px-3 py-1 bg-gray-300 text-gray-900 rounded"
+              onClick={() => toast.dismiss('delete-notification')}
+              className="px-3 py-1 bg-gray-300 text-gray-900 rounded transition-transform transform hover:scale-105 hover:bg-gray-400"
             >
               No
             </button>
@@ -197,19 +206,10 @@ const AchievementPage: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownVisible(!isDropdownVisible)}
-              className="flex items-center text-gray-700 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md"
-              style={{
-                backgroundColor: '#f5f5f5',
-                border: '2px solid #dcdcdc',
-                outline: 'none',
-                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#a1a1a1';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#dcdcdc';
-              }}
+              className="flex items-center text-gray-700 dark:text-gray-300 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md 
+             border-2 border-gray-900 bg-gray-100 hover:border-gray-700 
+             dark:border-gray-300 dark:bg-gray-800 dark:hover:border-white 
+             focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
             >
               <FaChevronDown className="mr-2" />
               Status

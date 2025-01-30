@@ -1,12 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import IEEELogo from '../../images/logo/logo.png';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Register: React.FC = () => {
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+
+  const handleCaptchaChange = (value: string | null) => {
+    setCaptchaVerified(!!value);
+  };
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!captchaVerified) {
+      toast.error('Please complete the CAPTCHA verification.');
+      return;
+    }
+
+    // Simulasi proses registrasi sukses
+    toast.success(
+      'Registration successful! Welcome to IEEE SB Telkom University.',
+    );
+    // Setelah sukses, redirect pengguna (opsional)
+    // navigate('/some-page'); // Gunakan useNavigate dari react-router-dom
+  };
+
   return (
     <>
       <Breadcrumb pageName="Register" />
+      <ToastContainer position="top-right" autoClose={3000} />
 
       <div className="min-h-screen bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
         <div className="flex flex-col md:flex-row h-full w-full">
@@ -31,7 +57,7 @@ const Register: React.FC = () => {
               Create your account to start your journey.
             </p>
 
-            <form>
+            <form onSubmit={handleRegister}>
               <div className="mb-6">
                 <label
                   className="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -89,6 +115,13 @@ const Register: React.FC = () => {
                   type="password"
                   className="mt-1 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-gray-800 focus:border-[#6B0DE3] focus:ring focus:ring-[#C0A2FE] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                   placeholder="••••••••"
+                />
+              </div>
+
+              <div className="mb-6">
+                <ReCAPTCHA
+                  sitekey="YOUR_SITE_KEY"
+                  onChange={handleCaptchaChange}
                 />
               </div>
 

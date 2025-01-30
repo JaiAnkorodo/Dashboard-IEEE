@@ -230,7 +230,7 @@ const AddNewsPage: React.FC = () => {
         {/* Date */}
         <div className="mb-4">
           <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Date
+            Date Published
           </label>
           <DatePicker
             selected={news.date}

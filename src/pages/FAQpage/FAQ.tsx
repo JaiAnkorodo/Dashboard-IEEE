@@ -93,16 +93,23 @@ const FAQPage: React.FC = () => {
   const handlePagination = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const deleteFaq = (id: number) => {
+    const faqToDelete = faqs.find((faq) => faq.id === id);
+
+    if (!faqToDelete) {
+      toast.error('FAQ not found!');
+      return;
+    }
+
     if (!toast.isActive('delete-notification')) {
       toast.info(
         <div>
-          <p>Are you sure you want to delete this FAQ?</p>
+          <p>
+            Are you sure you want to move the FAQ{' '}
+            <strong>{faqToDelete.question}</strong> to Trash?
+          </p>
           <div className="flex justify-end mt-2">
             <button
               onClick={() => {
-                const faqToDelete = faqs.find((faq) => faq.id === id);
-                if (!faqToDelete) return;
-
                 const updatedFaqs = faqs.filter((faq) => faq.id !== id);
                 setFaqs(updatedFaqs);
                 localStorage.setItem('faqs', JSON.stringify(updatedFaqs));
@@ -111,16 +118,18 @@ const FAQPage: React.FC = () => {
                 trash.push({ ...faqToDelete, type: 'faq' });
                 localStorage.setItem('trash', JSON.stringify(trash));
 
-                toast.dismiss();
-                toast.success('FAQ moved to trash successfully!');
+                toast.dismiss('delete-notification');
+                toast.success(
+                  `FAQ "${faqToDelete.question}" moved to Trash successfully!`,
+                );
               }}
-              className="px-3 py-1 bg-red-600 text-white rounded mr-2"
+              className="px-3 py-1 bg-red-600 text-white rounded mr-2 transition-transform transform hover:scale-105 hover:bg-red-700"
             >
               Yes
             </button>
             <button
-              onClick={() => toast.dismiss()}
-              className="px-3 py-1 bg-gray-300 text-gray-900 rounded"
+              onClick={() => toast.dismiss('delete-notification')}
+              className="px-3 py-1 bg-gray-300 text-gray-900 rounded transition-transform transform hover:scale-105 hover:bg-gray-400"
             >
               No
             </button>
@@ -154,19 +163,10 @@ const FAQPage: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownVisible(!isDropdownVisible)}
-              className="flex items-center text-gray-700 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md"
-              style={{
-                backgroundColor: '#f5f5f5',
-                border: '2px solid #dcdcdc',
-                outline: 'none',
-                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#a1a1a1';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#dcdcdc';
-              }}
+              className="flex items-center text-gray-700 dark:text-gray-300 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md 
+             border-2 border-gray-900 bg-gray-100 hover:border-gray-700 
+             dark:border-gray-300 dark:bg-gray-800 dark:hover:border-white 
+             focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
             >
               <FaChevronDown className="mr-2" />
               Status

@@ -16,7 +16,6 @@ interface Achievement {
   date: string;
   category: string;
   photo?: string;
-  photoLink?: string;
   status: 'Draft' | 'Published';
 }
 
@@ -30,7 +29,6 @@ const AddAchievementPage: React.FC = () => {
     date: '',
     category: '',
     photo: '',
-    photoLink: '',
     status: 'Draft',
   });
   const [errors, setErrors] = useState({
@@ -39,7 +37,6 @@ const AddAchievementPage: React.FC = () => {
     link: '',
     date: '',
     category: '',
-    photoLink: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -63,7 +60,6 @@ const AddAchievementPage: React.FC = () => {
     if (!achievement.link) newErrors.link = 'Link is required';
     if (!achievement.date) newErrors.date = 'Date is required';
     if (!achievement.category) newErrors.category = 'Category is required';
-    if (!achievement?.photoLink) newErrors.photoLink = 'Photo link is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -285,25 +281,6 @@ const AddAchievementPage: React.FC = () => {
             </button>
           </div>
         )}
-
-        {/* Photo Link Section */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Photo Link
-          </h2>
-          <input
-            type="url"
-            placeholder="Enter photo link"
-            value={achievement.photoLink}
-            onChange={(e) =>
-              setAchievement({ ...achievement, photoLink: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:ring-purple-600 transition-all"
-          />
-          {errors.photoLink && (
-            <div className="text-red-500 text-sm mt-1">{errors.photoLink}</div>
-          )}
-        </div>
 
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">

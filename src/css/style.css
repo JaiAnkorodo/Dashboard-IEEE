@@ -107,5 +107,13 @@
 
 .dark .ql-toolbar.ql-snow .ql-picker-item:hover,
 .dark .ql-toolbar.ql-snow .ql-picker-item.ql-selected {
-  color: #63b3ed !important; /* Warna hover pada dropdown */
+  color: #63b3ed !important;
 }
+
+/* .toast-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+} */

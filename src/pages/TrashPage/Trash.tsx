@@ -96,7 +96,7 @@ const TrashPage: React.FC = () => {
                 }, 500);
                 toast.dismiss('delete-notification');
               }}
-              className={`px-4 py-2 text-white rounded-md mr-2 ${buttonColor}`}
+              className={`px-4 py-2 text-white rounded-md mr-2 transition-transform transform hover:scale-105 ${buttonColor}`}
             >
               Yes
             </button>
@@ -104,7 +104,7 @@ const TrashPage: React.FC = () => {
               onClick={() => {
                 toast.dismiss('delete-notification');
               }}
-              className="px-4 py-2 bg-gray-300 text-gray-900 rounded-md"
+              className="px-4 py-2 bg-gray-300 text-gray-900 rounded-md transition-transform transform hover:scale-105 hover:bg-gray-400"
             >
               No
             </button>
@@ -125,6 +125,13 @@ const TrashPage: React.FC = () => {
   const restoreItems = (itemId?: number) => {
     const itemsToRestore = itemId ? [itemId] : Array.from(selectedItems);
     if (itemsToRestore.length === 0) return;
+
+    const itemTitles = itemsToRestore
+      .map((id) => {
+        const item = trashItems.find((item) => item.id === id);
+        return item ? item.title || item.name || item.question : '';
+      })
+      .join(', ');
 
     confirmAction(
       () => {
@@ -148,7 +155,7 @@ const TrashPage: React.FC = () => {
 
         setSelectedItems(new Set());
       },
-      `You are about to restore ${itemsToRestore.length} item(s).`,
+      `You are about to restore the following item(s): ${itemTitles}.`,
       'bg-green-600',
     );
   };
@@ -156,6 +163,13 @@ const TrashPage: React.FC = () => {
   const deleteItemsPermanently = (itemId?: number) => {
     const itemsToDelete = itemId ? [itemId] : Array.from(selectedItems);
     if (itemsToDelete.length === 0) return;
+
+    const itemTitles = itemsToDelete
+      .map((id) => {
+        const item = trashItems.find((item) => item.id === id);
+        return item ? item.title || item.name || item.question : '';
+      })
+      .join(', ');
 
     confirmAction(
       () => {
@@ -167,7 +181,7 @@ const TrashPage: React.FC = () => {
 
         setSelectedItems(new Set());
       },
-      `You are about to permanently delete ${itemsToDelete.length} item(s).`,
+      `You are about to permanently delete the following item(s): ${itemTitles}.`,
       'bg-red-600',
     );
   };

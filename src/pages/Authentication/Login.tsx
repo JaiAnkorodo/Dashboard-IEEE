@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import ReCAPTCHA from 'react-google-recaptcha';
 import IEEELogo from '../../images/logo/logo.png';
@@ -8,28 +10,24 @@ const Login: React.FC = () => {
   const [isCaptchaVerified, setCaptchaVerified] = useState(false);
 
   const handleCaptchaChange = (value: string | null) => {
-    if (value) {
-      setCaptchaVerified(true);
-    } else {
-      setCaptchaVerified(false);
-    }
+    setCaptchaVerified(!!value);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!isCaptchaVerified) {
-      alert('Please complete the CAPTCHA verification.');
+      toast.error('Please complete the CAPTCHA verification.');
       return;
     }
 
-    // Proses login di sini
-    alert('Login successful!');
+    toast.success('Login successful!');
   };
 
   return (
     <>
       <Breadcrumb pageName="Login" />
+      <ToastContainer position="top-right" autoClose={3000} />
 
       <div className="min-h-screen bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
         <div className="flex flex-col md:flex-row h-full w-full">
@@ -85,7 +83,7 @@ const Login: React.FC = () => {
 
               <div className="mb-6">
                 <ReCAPTCHA
-                  sitekey="YOUR_SITE_KEY" // nanti di ganti
+                  sitekey="YOUR_SITE_KEY" // Ganti dengan site key Anda
                   onChange={handleCaptchaChange}
                 />
               </div>

@@ -127,7 +127,7 @@ const NewsPage: React.FC = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredNews.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortNews.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -141,16 +141,23 @@ const NewsPage: React.FC = () => {
   };
 
   const deleteNews = (id: number) => {
+    const newsItemToDelete = news.find((item) => item.id === id);
+
+    if (!newsItemToDelete) {
+      toast.error('News item not found!');
+      return;
+    }
+
     if (!toast.isActive('delete-notification')) {
       toast.info(
         <div>
-          <p>Are you sure you want to move this news to Trash?</p>
+          <p>
+            Are you sure you want to move the news{' '}
+            <strong>{newsItemToDelete.title}</strong> to Trash?
+          </p>
           <div className="flex justify-end mt-2">
             <button
               onClick={() => {
-                const newsItemToDelete = news.find((item) => item.id === id);
-                if (!newsItemToDelete) return;
-
                 const updatedNews = news.filter((item) => item.id !== id);
                 setNews(updatedNews);
                 localStorage.setItem('news', JSON.stringify(updatedNews));
@@ -159,16 +166,18 @@ const NewsPage: React.FC = () => {
                 trash.push({ ...newsItemToDelete, type: 'news' });
                 localStorage.setItem('trash', JSON.stringify(trash));
 
-                toast.dismiss();
-                toast.success('News moved to Trash successfully!');
+                toast.dismiss('delete-notification');
+                toast.success(
+                  `${newsItemToDelete.title} moved to Trash successfully!`,
+                );
               }}
-              className="px-3 py-1 bg-red-600 text-white rounded mr-2"
+              className="px-3 py-1 bg-red-600 text-white rounded mr-2 transition-transform transform hover:scale-105 hover:bg-red-700"
             >
               Yes
             </button>
             <button
-              onClick={() => toast.dismiss()}
-              className="px-3 py-1 bg-gray-300 text-gray-900 rounded"
+              onClick={() => toast.dismiss('delete-notification')}
+              className="px-3 py-1 bg-gray-300 text-gray-900 rounded transition-transform transform hover:scale-105 hover:bg-gray-400"
             >
               No
             </button>
@@ -202,19 +211,10 @@ const NewsPage: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownVisible(!isDropdownVisible)}
-              className="flex items-center text-gray-700 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md"
-              style={{
-                backgroundColor: '#f5f5f5', // Warna latar belakang abu-abu muda
-                border: '2px solid #dcdcdc', // Border abu-abu muda
-                outline: 'none',
-                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#a1a1a1'; // Border lebih gelap saat hover
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#dcdcdc'; // Kembalikan border ke abu-abu muda setelah hover
-              }}
+              className="flex items-center text-gray-700 dark:text-gray-300 rounded-full px-4 py-2 transition-all transform hover:scale-105 hover:shadow-md 
+             border-2 border-gray-900 bg-gray-100 hover:border-gray-700 
+             dark:border-gray-300 dark:bg-gray-800 dark:hover:border-white 
+             focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
             >
               <FaChevronDown className="mr-2" />
               Status
@@ -313,7 +313,7 @@ const NewsPage: React.FC = () => {
                   CATEGORY
                 </th>
                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-500 dark:text-gray-300 flex items-center">
-                  <span>DATE</span>
+                  <span>DATE PUBLISHED</span>
                   <button
                     className="ml-2 text-gray-500 dark:text-gray-300"
                     onClick={() => toggleSortOrder('date')}
